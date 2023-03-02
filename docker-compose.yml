@@ -13,7 +13,7 @@ services:
   db_uat:
     image: postgres
     volumes:
-      - ./.db_volumes/fin_uat_db:/var/lib/postgresql/data
+      - ./.db_volumes/org_uat_db:/var/lib/postgresql/data
     ports:
       - "5433:5432"
     environment:
