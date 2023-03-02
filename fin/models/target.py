@@ -20,3 +20,5 @@ class TargetRequestModel(BaseModel):
     description: str
     target_value: Decimal
     target_currency: str
+    init_value: Decimal
+    init_currency: str

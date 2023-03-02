@@ -22,7 +22,7 @@ class DBEngineProvider:
         return self._engine
 
 
-class ORGDatabase:
+class FinDatabase:
     """DataBase Session"""
     def __init__(self, engine_provider: DBEngineProvider):
         self._engine: DBEngineProvider = engine_provider.engine
