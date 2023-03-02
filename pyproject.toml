@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "homerp-finance"
+version = "0.1.0"
+description = "HomeRP Finance module"
+authors = ["Beilak <beylak@yandex.ru>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+alembic = "^1.9.4"
+fastapi = "^0.92.0"
+dependency-injector = "^4.41.0"
+pydantic = "^1.10.5"
+sqlalchemy = "^2.0.4"
+uvicorn = "^0.20.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

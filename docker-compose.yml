@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  db_test:
+    image: postgres
+    ports:
+      - "5431:5432"
+    environment:
+      - POSTGRES_DB=fin_test
+      - POSTGRES_USER=fin_test_user
+      - POSTGRES_PASSWORD=fin_test_pwd
+
+  db_uat:
+    image: postgres
+    volumes:
+      - ./.db_volumes/fin_uat_db:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=fin_uat
+      - POSTGRES_USER=fin_uat_user
+      - POSTGRES_PASSWORD=fin_uat_pwd
