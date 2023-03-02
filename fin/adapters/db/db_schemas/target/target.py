@@ -2,8 +2,8 @@ from sqlalchemy import Column, ForeignKey, DateTime, func, Numeric, Integer, Str
 from sqlalchemy.orm import composite
 from sqlalchemy_utils.types.currency import CurrencyType
 
-from fin.db.db_conn import Base
-from fin.db.db_schemas.target.target_cnt import TargetCnt
+from fin.adapters.db.db_conn import Base
+from fin.adapters.db.db_schemas.target.target_cnt import TargetCnt
 from fin.models.common import Money
 
 

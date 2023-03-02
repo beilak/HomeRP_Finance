@@ -1,7 +1,7 @@
 from dependency_injector import containers
 from dependency_injector.providers import Configuration, Singleton
 from pydantic.env_settings import BaseSettings
-from fin.db.db_conn import DBEngineProvider
+from fin.adapters.db.db_conn import DBEngineProvider
 
 
 class FinContainer(containers.DeclarativeContainer):

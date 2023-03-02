@@ -1,6 +1,6 @@
 from sqlalchemy import select
-from fin.db.db_schemas.target.target_cnt import TargetCnt
-from fin.controllers.target.error import TargetCntNotFoundError
+from fin.adapters.db.db_schemas.target.target_cnt import TargetCnt
+from fin.adapters.target.error import TargetCntNotFoundError
 
 
 class TargetCntRepository:

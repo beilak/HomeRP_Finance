@@ -1,6 +1,6 @@
 from sqlalchemy import select
-from fin.db.db_schemas.target.target import Target
-from fin.controllers.target.error import TargetNotFoundError
+from fin.adapters.db.db_schemas.target.target import Target
+from fin.adapters.target.error import TargetNotFoundError
 
 
 class TargetRepository:
