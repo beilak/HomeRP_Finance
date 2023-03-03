@@ -1,9 +1,10 @@
 from sqlalchemy import select
 from fin.adapters.db.db_schemas.target.target import Target
-from fin.adapters.target.error import TargetNotFoundError
+from fin.adapters.repository.target.error import TargetNotFoundError
+from fin.adapters.repository.repository import Repository
 
 
-class TargetRepository:
+class TargetRepository(Repository):
 
     def __init__(self, db_session) -> None:
         """Init."""
@@ -17,17 +18,17 @@ class TargetRepository:
             await session.refresh(target)
         return target
 
-    async def is_trg_exist(self, trg_id: int):
+    async def is_obj_exist(self, trg_id: int):
         """Checking is target exist"""
         try:
-            target = await self.get_target(trg_id)
+            target = await self.get_object(trg_id)
             if target:
                 return True
         except TargetNotFoundError:
             return False
         return False
 
-    async def get_target(self, trg_id: int):
+    async def get_object(self, trg_id: int):
         """Get target info"""
         async with self._db_session() as session:
             targets = await session.execute(select(Target).filter(Target.target_id == trg_id))
@@ -37,9 +38,12 @@ class TargetRepository:
             else:
                 return target[0]
 
-    async def get_targets(self, offset=0, limit=100):
+    async def get_objects(self, targets_cnt_id: list, offset=0, limit=100):
         """Get all targets"""
         async with self._db_session() as session:
-            statement = select(Target).offset(offset).limit(limit)
+            statement = select(
+                Target,
+                Target.target_cnt_id.in_(targets_cnt_id)
+            ).offset(offset).limit(limit)
             result = await session.execute(statement)
             return result.all()

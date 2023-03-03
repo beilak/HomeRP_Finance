@@ -4,8 +4,8 @@ from pydantic import BaseModel
 from decimal import Decimal
 
 
-class TargetResponseModel(BaseModel):
-    target_id: int
+class TargetCntResponseModel(BaseModel):
+    target_cnt_id: int
     unit_id: str
     user_login: str
     target_name: str
@@ -15,10 +15,23 @@ class TargetResponseModel(BaseModel):
     current_value: Decimal
 
 
-class TargetRequestModel(BaseModel):
+class TargetCntRequestModel(BaseModel):
     target_name: str
     description: str
     target_value: Decimal
     target_currency: str
     init_value: Decimal
     init_currency: str
+
+
+class TargetResponseModel(BaseModel):
+    target_id: int
+    target_cnt_id: int
+    user_login: str
+
+
+class TargetRequestModel(BaseModel):
+    target_cnt_id: int
+    user_login: str
+    value: Decimal
+    currency: str
