@@ -6,20 +6,20 @@ from decimal import Decimal
 
 class TargetCntResponseModel(BaseModel):
     target_cnt_id: int
-    unit_id: str
-    user_login: str
-    target_name: str
+    # unit_id: str
+    # user_login: str
+    name: str
     description: str
-    target_value: Decimal
-    target_currency: str
-    current_value: Decimal
+    value: Decimal
+    currency: str
+    # current_value: Decimal
 
 
 class TargetCntRequestModel(BaseModel):
-    target_name: str
+    name: str
     description: str
-    target_value: Decimal
-    target_currency: str
+    value: Decimal
+    currency: str
     init_value: Decimal
     init_currency: str
 

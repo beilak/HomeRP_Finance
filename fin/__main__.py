@@ -4,7 +4,7 @@ from typing import Final
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError, StarletteHTTPException
 from fin.exceptions import valid_except_handler, http_except_handler
-from fin.route import target_router
+from fin.route import target_router, target_cnt_router
 
 
 FIN_APP: FastAPI
@@ -33,6 +33,7 @@ FIN_APP = FastAPI(
     on_shutdown=[service_shutdown],
     )
 
+FIN_APP.include_router(target_cnt_router, prefix=_API_PREFIX, tags=["Target"])
 FIN_APP.include_router(target_router, prefix=_API_PREFIX, tags=["Target"])
 
 FIN_APP.add_exception_handler(RequestValidationError, valid_except_handler)

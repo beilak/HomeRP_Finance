@@ -1,1 +1,1 @@
-from repository import Repository
+from fin.adapters.repository.repository import Repository

@@ -9,7 +9,7 @@ from fin.controllers.target import TargetCntService, TargetService
 class FinContainer(containers.DeclarativeContainer):
     """Org. container"""
 
-    wiring_config = containers.WiringConfiguration(modules=[])
+    wiring_config = containers.WiringConfiguration(modules=[".route.target.target", ".route.target.target_cnt"])
 
     config: Configuration = Configuration()
 

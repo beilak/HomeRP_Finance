@@ -3,15 +3,16 @@
 from sqlalchemy import select
 from fin.adapters.db.db_schemas.target.target_cnt import TargetCnt
 from fin.adapters.repository.target.error import TargetCntNotFoundError
+from fin.adapters.repository import Repository
 
 
-class TargetCntRepository:
+class TargetCntRepository(Repository):
 
     def __init__(self, db_session) -> None:
         """Init."""
         self._db_session = db_session
 
-    async def add(self, target_cnt: TargetCnt):
+    async def add(self, target_cnt: TargetCnt) -> TargetCnt:
         """Add new Target Center"""
         async with self._db_session() as session:
             session.add(target_cnt)
@@ -28,6 +29,13 @@ class TargetCntRepository:
         except TargetCntNotFoundError:
             return False
         return False
+
+    async def is_target_name_exist(self, trg_cnt_name: str):
+        """Checking is target center by name exist"""
+        async with self._db_session() as session:
+            targets_cnt = await session.execute(select(TargetCnt).filter(TargetCnt.name == trg_cnt_name))
+            target_cnt = targets_cnt.fetchone()
+            return False if not target_cnt else True
 
     async def get_object(self, trg_cnt_id: int):
         """Get target center info"""
