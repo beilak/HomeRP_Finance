@@ -23,6 +23,6 @@ class TargetCntService(Service):
             users.append(user[0])
         return users
 
-    async def get_target_cnt(self, unit_id):
+    async def get_target_cnt(self, target_cnt_id):
         """Read target Cnt detail"""
-        return await self._repository.get_object(unit_id=unit_id)
+        return await self._repository.get_object(target_cnt_id=target_cnt_id)
