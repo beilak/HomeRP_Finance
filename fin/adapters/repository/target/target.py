@@ -31,7 +31,11 @@ class TargetRepository(Repository):
     async def get_object(self, trg_id: int):
         """Get target info"""
         async with self._db_session() as session:
-            targets = await session.execute(select(Target).filter(Target.target_id == trg_id))
+            targets = await session.execute(
+                select(Target).filter(
+                    Target.target_id == trg_id
+                )
+            )
             target = targets.fetchone()
             if not target:
                 raise TargetNotFoundError(trg_id)
