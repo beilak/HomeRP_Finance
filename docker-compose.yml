@@ -6,7 +6,7 @@ services:
     volumes:
       - ./.db_volumes/org_test_db:/var/lib/postgresql/data
     ports:
-      - "5000:5432"
+      - "5001:5432"
     environment:
       - POSTGRES_DB=fin_test
       - POSTGRES_USER=fin_test_user
