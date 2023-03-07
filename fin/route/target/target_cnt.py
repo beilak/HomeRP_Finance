@@ -11,13 +11,32 @@ from fin.controllers.target import TargetService, TargetCntService
 target_cnt_router: APIRouter = APIRouter()
 
 
+@target_cnt_router.post(
+    "/unit/{unit_id}/target",
+    status_code=status.HTTP_201_CREATED,
+    response_model=TargetCntResponseModel,
+)
+@inject
+async def create_target_cnt(
+        unit_id: str,
+        target: TargetCntRequestModel,
+        target_cnt_service: TargetCntService = Depends(Provide[FinContainer.target_cnt_service]),
+) -> TargetCntResponseModel:
+    """Post Target Center"""
+    created_target = await target_cnt_service.create(target)
+    created_target_dict = created_target.__dict__
+    created_target_dict["currency"] = str(created_target_dict["currency"])
+    return TargetCntResponseModel(**created_target_dict)
+
+
 @target_cnt_router.get(
-    "/targets",
+    "/unit/{unit_id}/targets",
     status_code=status.HTTP_200_OK,
     response_model=List[TargetCntResponseModel],
 )
 @inject
 async def get_targets_cnt(
+        unit_id: str,
         skip: int = 0,
         limit: int = 100,
         target_cnt_service: TargetCntService = Depends(Provide[FinContainer.target_cnt_service]),
@@ -33,12 +52,13 @@ async def get_targets_cnt(
 
 
 @target_cnt_router.get(
-    "/target/{target_cnt_id}",
+    "/unit/{unit_id}/target/{target_cnt_id}",
     status_code=status.HTTP_200_OK,
     response_model=TargetCntResponseModel,
 )
 @inject
 async def get_target_cnt(
+        unit_id: str,
         target_cnt_id: int,
         target_cnt_service: TargetCntService = Depends(Provide[FinContainer.target_cnt_service]),
 ) -> TargetCntResponseModel:
@@ -47,20 +67,3 @@ async def get_target_cnt(
     target_cnt_dict = target_cnt.__dict__
     target_cnt_dict["currency"] = str(target_cnt_dict["currency"])
     return TargetCntResponseModel(**target_cnt_dict)
-
-
-@target_cnt_router.post(
-    "/target",
-    status_code=status.HTTP_201_CREATED,
-    response_model=TargetCntResponseModel,
-)
-@inject
-async def create_target_cnt(
-        target: TargetCntRequestModel,
-        target_cnt_service: TargetCntService = Depends(Provide[FinContainer.target_cnt_service]),
-) -> TargetCntResponseModel:
-    """Post Target Center"""
-    created_target = await target_cnt_service.create(target)
-    created_target_dict = created_target.__dict__
-    created_target_dict["currency"] = str(created_target_dict["currency"])
-    return TargetCntResponseModel(**created_target_dict)
