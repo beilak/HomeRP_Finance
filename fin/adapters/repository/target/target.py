@@ -43,7 +43,7 @@ class TargetRepository(Repository):
         async with self._db_session() as session:
             statement = select(
                 Target,
-                Target.target_cnt_id.in_(targets_cnt_id)
+                Target.target_cnt_id.in_(targets_cnt_id),
             ).offset(offset).limit(limit)
             result = await session.execute(statement)
             return result.all()

@@ -18,6 +18,9 @@ sqlalchemy-utils = "^0.40.0"
 py-moneyed = "^3.0"
 psycopg2-binary = "^2.9.5"
 asyncpg = "^0.27.0"
+python-keycloak = "^2.12.0"
+cryptography = "^39.0.2"
+secure = "^0.3.0"
 
 
 [build-system]

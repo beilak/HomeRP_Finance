@@ -4,6 +4,7 @@ from pydantic.env_settings import BaseSettings
 from fin.adapters.db.db_conn import DBEngineProvider, FinDatabase
 from fin.adapters.repository.target import TargetRepository, TargetCntRepository
 from fin.controllers.target import TargetCntService, TargetService
+from fin.adapters.auth.keycloak_adapter import KeycloakAdapter
 
 
 class FinContainer(containers.DeclarativeContainer):
@@ -44,6 +45,14 @@ class FinContainer(containers.DeclarativeContainer):
     target_service: Factory[TargetService] = Factory(
         TargetService,
         repository=_target_repository,
+    )
+
+    keycloak_adapter: Singleton[KeycloakAdapter] = Singleton(
+        KeycloakAdapter,
+        auth_url=config.auth_url,
+        realm_name=config.realm_name,
+        client_id=config.client_id,
+        leeway=config.token_leeway
     )
 
     @staticmethod

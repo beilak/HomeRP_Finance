@@ -13,7 +13,9 @@ class TargetService(Service):
 
     async def get_targets(self, targets_cnt_id: list, offset=0, limit=100):
         """Read targets Cnt"""
-        result = await self._repository.get_objects(targets_cnt_id=targets_cnt_id, offset=offset, limit=limit)
+        result = await self._repository.get_objects(
+            targets_cnt_id=targets_cnt_id, offset=offset, limit=limit
+        )
         users = []
         for user in result:
             users.append(user[0])

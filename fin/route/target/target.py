@@ -1,11 +1,12 @@
 """Target and Target Cneter Router"""
 
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException, Security
 from typing import List
 from dependency_injector.wiring import inject, Provide
 from fin.models import TargetCntResponseModel, TargetCntRequestModel, TargetResponseModel, TargetRequestModel
 from fin.containers import FinContainer
 from fin.controllers.target import TargetService, TargetCntService
+from fin.route.oauth import oauth_check
 
 
 target_router: APIRouter = APIRouter()
@@ -14,7 +15,7 @@ target_router: APIRouter = APIRouter()
 @target_router.get(
     "/target/{target_cnt_id}/records",
     status_code=status.HTTP_200_OK,
-    response_model=List[TargetResponseModel],
+    # response_model=List[TargetResponseModel],
 )
 @inject
 async def get_target_records(
@@ -24,7 +25,9 @@ async def get_target_records(
         target_service: TargetService = Depends(Provide[FinContainer.target_service]),
 ) -> List[TargetResponseModel]:
     """Return list of Targets by Target Cnt"""
-    targets = await target_service.get_targets(targets_cnt_id=[target_cnt_id], offset=skip, limit=limit)
+    targets = await target_service.get_targets(
+        targets_cnt_id=[target_cnt_id], offset=skip, limit=limit
+    )
     target_out = []
     for target in targets:
         target_out.append(TargetResponseModel(**target.__dict__))
