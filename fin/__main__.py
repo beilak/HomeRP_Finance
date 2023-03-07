@@ -1,10 +1,12 @@
 from fin.containers import FinContainer
 from fin.config import Settings
 from typing import Final
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.exceptions import RequestValidationError, StarletteHTTPException
 from fin.exceptions import valid_except_handler, http_except_handler
-from fin.route import target_router
+from fin.route import target_router, target_cnt_router
+from fastapi.middleware.cors import CORSMiddleware
+from fin.route.oauth import oauth_check
 
 
 FIN_APP: FastAPI
@@ -31,8 +33,31 @@ FIN_APP = FastAPI(
     docs_url=f"{_API_PREFIX}/doc",
     on_startup=[service_startup],
     on_shutdown=[service_shutdown],
-    )
+    swagger_ui_init_oauth={
+        "clientId": "HomeRP_UI"
+    },
+    dependencies=[
+        Depends(oauth_check)
+    ]
+)
 
+# ORIGINS = [
+#     "https://cdn.jsdelivr.net",
+#     "http://127.0.0.1:28080",
+#     "http://127.0.0.1:8081",
+#     "*",
+# ]
+#
+# FIN_APP.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=ORIGINS,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
+
+
+FIN_APP.include_router(target_cnt_router, prefix=_API_PREFIX, tags=["Target"])
 FIN_APP.include_router(target_router, prefix=_API_PREFIX, tags=["Target"])
 
 FIN_APP.add_exception_handler(RequestValidationError, valid_except_handler)

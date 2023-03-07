@@ -8,7 +8,7 @@ from alembic import context
 
 def get_dsn():
     """Get DB DSN."""
-    return os.getenv('DB_DSN', 'postgresql://fin_test_user:fin_test_pwd@127.0.0.1:5431/fin_test')
+    return os.getenv('DB_DSN', 'postgresql://fin_test_user:fin_test_pwd@127.0.0.1:5000/fin_test')
 
 
 # this is the Alembic Config object, which provides
