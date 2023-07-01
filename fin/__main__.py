@@ -20,6 +20,7 @@ async def service_startup() -> None:
     FIN_APP.__container = container
     await container.event_receiver().run()
 
+
 async def service_shutdown() -> None:
     ...
 

@@ -12,13 +12,13 @@ services:
       - POSTGRES_USER=fin_test_user
       - POSTGRES_PASSWORD=fin_test_pwd
 
-#  db_uat:
-#    image: postgres
-#    volumes:
-#      - ./.db_volumes/org_uat_db:/var/lib/postgresql/data
-#    ports:
-#      - "5433:5432"
-#    environment:
-#      - POSTGRES_DB=fin_uat
-#      - POSTGRES_USER=fin_uat_user
-#      - POSTGRES_PASSWORD=fin_uat_pwd
+  rabbitmq:
+    image: rabbitmq:3.12.0-management-alpine
+    hostname: rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=test_user
+      - RABBITMQ_DEFAULT_PASS=test_pwd
+    ports:
+      - 5672:5672
+      - 15672:15672
