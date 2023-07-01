@@ -5,6 +5,7 @@ from fin.adapters.db.db_conn import DBEngineProvider, FinDatabase
 from fin.adapters.repository.target import TargetRepository, TargetCntRepository
 from fin.controllers.target import TargetCntService, TargetService
 from fin.adapters.auth.keycloak_adapter import KeycloakAdapter
+from fin.events.event_receiver import EventReceiver
 
 
 class FinContainer(containers.DeclarativeContainer):
@@ -53,6 +54,14 @@ class FinContainer(containers.DeclarativeContainer):
         realm_name=config.realm_name,
         client_id=config.client_id,
         leeway=config.token_leeway
+    )
+
+    event_receiver: Singleton[EventReceiver] = Singleton(
+        EventReceiver,
+        mq_host=config.mq_host,
+        mq_user=config.mq_user,
+        mq_pwd=config.mq_pass,
+        queue_name="q1"
     )
 
     @staticmethod

@@ -18,7 +18,7 @@ async def service_startup() -> None:
     container: Final[FinContainer] = FinContainer.create_container(settings)
     container.init_resources()
     FIN_APP.__container = container
-
+    await container.event_receiver().run()
 
 async def service_shutdown() -> None:
     ...

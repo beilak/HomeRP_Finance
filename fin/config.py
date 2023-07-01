@@ -12,3 +12,7 @@ class Settings(BaseSettings):
     realm_name = "HomeRP"
     client_id = "HomeRP_Finance"
     token_leeway = 30
+
+    mq_host: str
+    mq_user: str
+    mq_pass: str
