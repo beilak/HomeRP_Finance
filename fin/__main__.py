@@ -5,7 +5,7 @@ from fastapi import FastAPI, Depends
 from fastapi.exceptions import RequestValidationError, StarletteHTTPException
 from fin.exceptions import valid_except_handler, http_except_handler
 from fin.route import target_router, target_cnt_router
-from fastapi.middleware.cors import CORSMiddleware
+# from fastapi.middleware.cors import CORSMiddleware
 from fin.route.oauth import oauth_check
 
 
@@ -18,7 +18,7 @@ async def service_startup() -> None:
     container: Final[FinContainer] = FinContainer.create_container(settings)
     container.init_resources()
     FIN_APP.__container = container
-    await container.event_receiver().run()
+    # await container.event_receiver().run()
 
 
 async def service_shutdown() -> None:
@@ -59,7 +59,7 @@ FIN_APP = FastAPI(
 
 
 FIN_APP.include_router(target_cnt_router, prefix=_API_PREFIX, tags=["Target"])
-FIN_APP.include_router(target_router, prefix=_API_PREFIX, tags=["Target"])
+FIN_APP.include_router(target_router, prefix=_API_PREFIX, tags=["Target flow"])
 
 FIN_APP.add_exception_handler(RequestValidationError, valid_except_handler)
 FIN_APP.add_exception_handler(StarletteHTTPException, http_except_handler)

@@ -2,6 +2,7 @@
 
 from pydantic import BaseModel
 from decimal import Decimal
+from typing import Literal
 
 
 class TargetCntResponseModel(BaseModel):
@@ -17,11 +18,11 @@ class TargetCntResponseModel(BaseModel):
 
 class TargetCntRequestModel(BaseModel):
     name: str
-    description: str
-    value: Decimal
-    currency: str
-    init_value: Decimal
-    init_currency: str
+    # description: str
+    # value: Decimal
+    # currency: Literal["RUB", "USD", "EUR", "GBP", "CHF", "CNY", "AMD"]
+    # init_value: Decimal
+    # init_currency: Literal["RUB", "USD", "EUR", "GBP", "CHF", "CNY", "AMD"]
 
 
 class TargetResponseModel(BaseModel):

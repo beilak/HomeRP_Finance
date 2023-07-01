@@ -1,6 +1,7 @@
 from dependency_injector import containers
 from dependency_injector.providers import Configuration, Singleton, Factory
-from pydantic.env_settings import BaseSettings
+# from pydantic.env_settings import BaseSettings
+from pydantic_settings import BaseSettings
 from fin.adapters.db.db_conn import DBEngineProvider, FinDatabase
 from fin.adapters.repository.target import TargetRepository, TargetCntRepository
 from fin.controllers.target import TargetCntService, TargetService

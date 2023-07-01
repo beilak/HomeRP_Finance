@@ -9,7 +9,7 @@ async def valid_except_handler(
 ) -> JSONResponse:
     """Request valid handler"""
     # ToDo implement
-    return JSONResponse(status_code=400, content='')
+    return JSONResponse(status_code=400, content=f'{exc=}')
 
 
 async def http_except_handler(
@@ -18,4 +18,4 @@ async def http_except_handler(
 ) -> JSONResponse:
     """HTTP exception handler"""
     # ToDo implement
-    return JSONResponse(status_code=400, content='')
+    return JSONResponse(status_code=400, content=f'{exc=}')

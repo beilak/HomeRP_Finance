@@ -1,6 +1,6 @@
 """Target and Target Cneter Router"""
 
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException, Header
 from typing import List
 from dependency_injector.wiring import inject, Provide
 from fin.models import TargetCntResponseModel, TargetCntRequestModel, TargetResponseModel, TargetRequestModel
@@ -12,17 +12,19 @@ target_cnt_router: APIRouter = APIRouter()
 
 
 @target_cnt_router.post(
-    "/unit/{unit_id}/target",
+    "/targets",
     status_code=status.HTTP_201_CREATED,
     response_model=TargetCntResponseModel,
 )
 @inject
 async def create_target_cnt(
-        unit_id: str,
+        # unit_id: str,
         target: TargetCntRequestModel,
         target_cnt_service: TargetCntService = Depends(Provide[FinContainer.target_cnt_service]),
+        user_agent: str | None = Header(default=None),
 ) -> TargetCntResponseModel:
     """Post Target Center"""
+    # print(f"{user_agent=}")
     created_target = await target_cnt_service.create(target)
     created_target_dict = created_target.__dict__
     created_target_dict["currency"] = str(created_target_dict["currency"])
