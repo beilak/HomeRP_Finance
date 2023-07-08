@@ -9,6 +9,7 @@ from fin.route import target_router, target_cnt_router, tech_router
 from fin.route.oauth import oauth_check
 from dependency_injector.wiring import Provide, inject
 from fin.events.event_receiver import EventReceiver
+from starlette_prometheus import metrics, PrometheusMiddleware
 
 
 FIN_APP: FastAPI
@@ -71,10 +72,12 @@ FIN_APP = FastAPI(
 #     allow_headers=["*"],
 # )
 
+FIN_APP.add_middleware(PrometheusMiddleware)
 
 FIN_APP.include_router(target_cnt_router, prefix=_API_PREFIX, tags=["Target"])
 FIN_APP.include_router(target_router, prefix=_API_PREFIX, tags=["Target flow"])
 FIN_APP.include_router(tech_router, prefix=_API_PREFIX, tags=["Tech"])
+FIN_APP.add_route("/metrics", metrics)
 
 FIN_APP.add_exception_handler(RequestValidationError, valid_except_handler)
 FIN_APP.add_exception_handler(StarletteHTTPException, http_except_handler)

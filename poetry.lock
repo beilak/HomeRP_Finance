@@ -825,6 +825,21 @@ codegen = ["lxml", "requests", "yapf"]
 testing = ["coverage", "flake8", "flake8-comprehensions", "flake8-deprecated", "flake8-import-order", "flake8-print", "flake8-quotes", "flake8-rst-docstrings", "flake8-tuple", "yapf"]
 
 [[package]]
+name = "prometheus-client"
+version = "0.12.0"
+description = "Python client for the Prometheus monitoring system."
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+files = [
+    {file = "prometheus_client-0.12.0-py2.py3-none-any.whl", hash = "sha256:317453ebabff0a1b02df7f708efbab21e3489e7072b61cb6957230dd004a0af0"},
+    {file = "prometheus_client-0.12.0.tar.gz", hash = "sha256:1b12ba48cee33b9b0b9de64a1047cbd3c5f2d0ab6ebcead7ddda613a750ec3c5"},
+]
+
+[package.extras]
+twisted = ["twisted"]
+
+[[package]]
 name = "psycopg2-binary"
 version = "2.9.6"
 description = "psycopg2 - Python-PostgreSQL Database Adapter"
@@ -1270,6 +1285,22 @@ anyio = ">=3.4.0,<5"
 full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart", "pyyaml"]
 
 [[package]]
+name = "starlette-prometheus"
+version = "0.9.0"
+description = "Prometheus integration for Starlette"
+category = "main"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "starlette-prometheus-0.9.0.tar.gz", hash = "sha256:a52fb0f1df52b44a7a677a792759337ef0ce0d59ddf3e684a7d6459a93a90e99"},
+    {file = "starlette_prometheus-0.9.0-py3-none-any.whl", hash = "sha256:b4702e4ec67dce508d28551db0e45f12f58411afdb5d1078c92ff74331915381"},
+]
+
+[package.dependencies]
+prometheus_client = ">=0.12,<0.13"
+starlette = ">=0.12.2"
+
+[[package]]
 name = "typing-extensions"
 version = "4.7.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
@@ -1409,4 +1440,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "013cef0f2dbe48dec462f64d66eff203049d2e2f3b0417b17f27ee7c91d716ad"
+content-hash = "91d98547270dd0742e340420c55f9df377ed5d9c19095d02a17c352383681cbf"
