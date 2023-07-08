@@ -18,7 +18,6 @@ FIN_APP: FastAPI
 @inject
 async def run_event_receiver(
         event_receiver: EventReceiver = Provide[FinContainer.event_receiver],
-        # tech_service: EventReceiver = Provide[FinContainer.tech_service],
 ) -> None:
     event_receiver.run()
 
@@ -31,9 +30,6 @@ async def service_startup() -> None:
     FIN_APP.container = container
 
     await run_event_receiver()
-    # container._target_repository()
-    # container.tech_service()
-    # await container.event_receiver().run()
 
 
 async def service_shutdown() -> None:
