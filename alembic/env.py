@@ -22,7 +22,8 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from fin.adapters.db.db_conn import Base
+#from fin.adapters.db.db_conn import Base
+from fin.adapters.db.db_schemas.db_model import Base
 
 target_metadata = Base.metadata
 # target_metadata = None
