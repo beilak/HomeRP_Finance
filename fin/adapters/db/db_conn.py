@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine
 
 
-Base = declarative_base()
+#Base = declarative_base()
 
 DB_SYS = "postgresql"
 DRIVER = "asyncpg" 

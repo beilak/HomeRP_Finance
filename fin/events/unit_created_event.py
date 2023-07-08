@@ -4,18 +4,21 @@ from fin.events.event_handler import EventHandler
 from fin.events.error import EventHandlerError
 import aio_pika
 import asyncio
+import json
 
 
 class UnitCreatedEvent(EventHandler):
 
-    def __int__(
+    def __init__(
             self,
-            # target_cnt_service: TargetCntService
+            target_cnt_service: TargetCntService
     ):
-        ...
-        # self._target_cnt_service: TargetCntService = target_cnt_service
+        self._target_cnt_service: TargetCntService = target_cnt_service
 
     async def run(self, msg: aio_pika.IncomingMessage):
-        #raise EventHandlerError
-        print("proc")
-        # print(msg.body.decode())
+        body: dict = json.loads(msg.body.decode())
+
+        await self._target_cnt_service.init_defaulter_target_cnt(
+            unit_id=body['unit_id'],
+            login=body['admin'],
+        )

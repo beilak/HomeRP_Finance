@@ -62,7 +62,6 @@ class TechService:
 
     async def set_req_processed(self, req_id: str) -> None:
         # cache = await self.get_redis()
-        print("set")
         await self._pool.set(name=req_id, value=req_id)
 
     async def is_req_processed(self, req_id: str) -> bool:

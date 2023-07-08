@@ -1,7 +1,7 @@
 """Target DB Repository"""
 
 from sqlalchemy import select
-from fin.adapters.db.db_schemas.target.target_cnt import TargetCnt
+from fin.adapters.db.db_schemas.db_model import TargetCnt
 from fin.adapters.repository.target.error import TargetCntNotFoundError
 from fin.adapters.repository import Repository
 

@@ -83,13 +83,10 @@ class FinContainer(containers.DeclarativeContainer):
         mq_host=config.mq_host,
         mq_user=config.mq_user,
         mq_pwd=config.mq_pass,
-        queue_name="FIN_QUEUE", # ToDo to Config
+        queue_name=config.listen_queue,
         tech_service=tech_service,
         handlers=providers.Dict(
-            NEW_UNIT_POSTED_EVN=Factory(
-                UnitCreatedEvent,
-                # target_cnt_service=target_cnt_service,
-            )
+            NEW_UNIT_POSTED_EVN=unit_created_event,
         )
     )
 

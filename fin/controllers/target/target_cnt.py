@@ -1,10 +1,12 @@
 """Service for Target Center"""
+import logging
 
 from fin.models.target import TargetCntRequestModel
-from fin.adapters.db.db_schemas.target.target_cnt import TargetCnt
+from fin.adapters.db.db_schemas.db_model import TargetCnt
 from fin.controllers.service import Service
 from fin.adapters.repository.target.error import TargetCntExist
 from fin.adapters.repository.target import TargetCntRepository
+from sqlalchemy_utils import Currency
 
 
 class TargetCntService(Service):
@@ -49,6 +51,29 @@ class TargetCntService(Service):
             trg_cnt_name=target_cnt_name,
         )
 
-    async def init_defaulter_target_cnt(self, unit_id: str) -> None:
-        # ToDo Implement
-        print("ToDo >>>>")
+    async def init_defaulter_target_cnt(self, unit_id: str, login: str) -> None:
+        """Set default target cnt from templates"""
+        # ToDo replace to DB
+        templates: list[dict] = [
+            {"name": "apartment", "description": "Main apartment", "value": 10_000_000, "currency": "RUB"},
+            {"name": "auto", "description": "Auto", "value": 3_000_000, "currency": "RUB"},
+            {"name": "fin_airbag", "description": "Financial airbag", "value": 1_000_000, "currency": "RUB"},
+        ]
+        ""
+
+        logging.error(">>>>>")
+        for template in templates:
+            try:
+                cnt = TargetCnt(
+                    unit_id=unit_id,
+                    name=template['name'],
+                    description=template['description'],
+                    value=template['value'],
+                    currency=Currency(template['currency']),
+                    init_value=0,
+                    init_currency=Currency(template['currency']),
+                    user_login=login,
+                )
+                await self._repository.add(cnt)
+            except BaseException as e:
+                logging.error(f">>>>, {e}")

@@ -1,5 +1,5 @@
 from sqlalchemy import select
-from fin.adapters.db.db_schemas.target.target import Target
+from fin.adapters.db.db_schemas.db_model import Target
 from fin.adapters.repository.target.error import TargetNotFoundError
 from fin.adapters.repository.repository import Repository
 

@@ -2,17 +2,19 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    db_user = "fin_test_user"
-    db_pwd = "fin_test_pwd"
-    db_host = "127.0.0.1"
-    db_port = "5001"
-    db_name = "fin_test"
+    db_user: str
+    db_pwd: str
+    db_host: str
+    db_port: int
+    db_name: str
 
-    auth_url = "http://127.0.0.1:8090"
-    realm_name = "HomeRP"
-    client_id = "HomeRP_Finance"
-    token_leeway = 30
+    #ToDo add Auth
+    # auth_url = "http://127.0.0.1:8090"
+    # realm_name = "HomeRP"
+    # client_id = "HomeRP_Finance"
+    # token_leeway = 30
 
     mq_host: str
     mq_user: str
     mq_pass: str
+    mq_listen_queue: str

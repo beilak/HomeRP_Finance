@@ -1,6 +1,6 @@
 """Service for Target Center"""
 from fin.models.target import TargetRequestModel
-from fin.adapters.db.db_schemas.target.target import Target
+from fin.adapters.db.db_schemas.db_model import Target
 from fin.controllers.service import Service
 
 
