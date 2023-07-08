@@ -1,18 +1,24 @@
-from dependency_injector import containers
-from dependency_injector.providers import Configuration, Singleton, Factory
-# from pydantic.env_settings import BaseSettings
-from pydantic_settings import BaseSettings
+from dependency_injector import containers, providers
+from dependency_injector.providers import Configuration, Singleton, Factory, Resource
+from pydantic.env_settings import BaseSettings
 from fin.adapters.db.db_conn import DBEngineProvider, FinDatabase
 from fin.adapters.repository.target import TargetRepository, TargetCntRepository
 from fin.controllers.target import TargetCntService, TargetService
 from fin.adapters.auth.keycloak_adapter import KeycloakAdapter
 from fin.events.event_receiver import EventReceiver
+from fin.events.unit_created_event import UnitCreatedEvent
+from fin.controllers.tech.tech import TechService, init_tech_service
 
 
 class FinContainer(containers.DeclarativeContainer):
     """Org. container"""
 
-    wiring_config = containers.WiringConfiguration(modules=[".route.target.target", ".route.target.target_cnt"])
+    wiring_config = containers.WiringConfiguration(
+        modules=[
+            ".route.target.target", ".route.target.target_cnt", ".route.tech.tech",
+            ".__main__",
+        ]
+    )
 
     config: Configuration = Configuration()
 
@@ -49,6 +55,16 @@ class FinContainer(containers.DeclarativeContainer):
         repository=_target_repository,
     )
 
+    tech_service: Factory[TechService] = Factory(
+        init_tech_service, #TechService,
+        repository=_target_repository,
+        redis_auth=providers.Dict(  # ToDo replace to Conffig
+            host="127.0.0.1",
+            port=6379,
+            pwd="test_pass",
+        )
+    )
+
     keycloak_adapter: Singleton[KeycloakAdapter] = Singleton(
         KeycloakAdapter,
         auth_url=config.auth_url,
@@ -57,12 +73,24 @@ class FinContainer(containers.DeclarativeContainer):
         leeway=config.token_leeway
     )
 
-    event_receiver: Singleton[EventReceiver] = Singleton(
+    unit_created_event: Factory[UnitCreatedEvent] = Factory(
+        UnitCreatedEvent,
+        target_cnt_service=target_cnt_service,
+    )
+
+    event_receiver: Factory[EventReceiver] = Factory(
         EventReceiver,
         mq_host=config.mq_host,
         mq_user=config.mq_user,
         mq_pwd=config.mq_pass,
-        queue_name="q1"
+        queue_name="FIN_QUEUE", # ToDo to Config
+        tech_service=tech_service,
+        handlers=providers.Dict(
+            NEW_UNIT_POSTED_EVN=Factory(
+                UnitCreatedEvent,
+                # target_cnt_service=target_cnt_service,
+            )
+        )
     )
 
     @staticmethod

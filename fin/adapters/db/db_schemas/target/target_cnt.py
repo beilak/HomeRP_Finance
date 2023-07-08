@@ -23,3 +23,13 @@ class TargetCnt(Base):
 
     target_money = composite(Money, value, currency)
     init_money = composite(Money, init_value, init_currency)
+
+
+class TargetCntTemplate(Base):
+    __tablename__ = "target_cnt_template"
+    template_id = Column(Integer(), primary_key=True, autoincrement=True)
+    name = Column(String(32))
+    description = Column(String(128))
+    value = Column(Numeric(precision=8))
+    currency = Column(CurrencyType)
+    user_login = Column(String(32))

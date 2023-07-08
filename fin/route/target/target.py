@@ -1,49 +1,69 @@
 """Target and Target Cneter Router"""
 
-from fastapi import APIRouter, Depends, status, HTTPException, Security
+from fastapi import APIRouter, Depends, status, Header
 from typing import List
 from dependency_injector.wiring import inject, Provide
-from fin.models import TargetCntResponseModel, TargetCntRequestModel, TargetResponseModel, TargetRequestModel
+from fin.models import TargetResponseModel, TargetRequestModel
 from fin.containers import FinContainer
-from fin.controllers.target import TargetService, TargetCntService
+from fin.controllers.target import TargetService
+from fin.controllers.tech.tech import TechService
 from fin.route.oauth import oauth_check
+from fin.models.common import UserProfile
+from fin.exceptions import NoMatchError
 
 
 target_router: APIRouter = APIRouter()
 
 
 @target_router.post(
-    "/unit/{unit_id}/target/{target_cnt_id}/record",
+    "/targets/{target_cnt_id}/records",
     status_code=status.HTTP_201_CREATED,
     response_model=TargetResponseModel,
 )
 @inject
 async def create_target_record(
-        unit_id: str,
+        target_cnt_id: int,
         target: TargetRequestModel,
+        if_match: str = Header(),
         target_service: TargetService = Depends(Provide[FinContainer.target_service]),
+        tech_service: TechService = Depends(Provide[FinContainer.tech_service]),
+        user_profile: UserProfile = Depends(oauth_check),
 ) -> TargetResponseModel:
     """Post Target Center"""
-    created_target_record = await target_service.create(target)
-    return TargetResponseModel(**created_target_record.__dict__)
+
+    fingerprint = await tech_service.get_target_fingerprint(
+        unit_id=user_profile.unit_id, target_cnt_id=target_cnt_id,
+    )
+
+    if fingerprint != if_match:
+        raise NoMatchError
+
+    target_record = await target_service.create(
+        cr_target=target,
+        target_cnt_id=target_cnt_id,
+        user=user_profile.login,
+        unit_id=user_profile.unit_id,
+    )
+
+    return TargetResponseModel(**target_record.__dict__)
 
 
 @target_router.get(
-    "/unit/{unit_id}/target/{target_cnt_id}/records",
+    "/targets/{target_cnt_id}/records",
     status_code=status.HTTP_200_OK,
     response_model=List[TargetResponseModel],
 )
 @inject
 async def get_target_records(
-        unit_id: str,
         target_cnt_id: int,
         skip: int = 0,
         limit: int = 100,
         target_service: TargetService = Depends(Provide[FinContainer.target_service]),
+        user_profile: UserProfile = Depends(oauth_check),
 ) -> List[TargetResponseModel]:
     """Return list of Targets by Target Cnt"""
     targets = await target_service.get_targets(
-        targets_cnt_id=[target_cnt_id], offset=skip, limit=limit
+        unit_id=user_profile.unit_id, targets_cnt_id=[target_cnt_id], offset=skip, limit=limit,
     )
     target_out = []
     for target in targets:

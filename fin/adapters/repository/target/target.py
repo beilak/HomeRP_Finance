@@ -42,11 +42,12 @@ class TargetRepository(Repository):
             else:
                 return target[0]
 
-    async def get_objects(self, targets_cnt_id: list, offset=0, limit=100):
+    async def get_objects(self, unit_id: str, targets_cnt_id: list, offset=0, limit=100):
         """Get all targets"""
         async with self._db_session() as session:
             statement = select(
                 Target,
+            ).filter(
                 Target.target_cnt_id.in_(targets_cnt_id),
             ).offset(offset).limit(limit)
             result = await session.execute(statement)
