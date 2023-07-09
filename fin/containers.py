@@ -86,6 +86,8 @@ class FinContainer(containers.DeclarativeContainer):
         mq_pwd=config.mq_pass,
         queue_name=config.listen_queue,
         tech_service=tech_service,
+        mq_exchange=config.mq_exchange,  # "hrp"
+        mq_routing_key=config.mq_routing_key, # "org_event"
         handlers=providers.Dict(
             NEW_UNIT_POSTED_EVN=unit_created_event,
         )

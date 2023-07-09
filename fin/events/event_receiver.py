@@ -18,12 +18,16 @@ class EventReceiver:
             self, mq_host: str, mq_user: str, mq_pwd: str, queue_name: str,
             tech_service: TechService,
             handlers: dict[HANDLER_NAME: HANDLER],
+            mq_exchange: str,
+            mq_routing_key: str,
     ):
         self._connection = None
         self._mq_dsn = f"amqp://{mq_user}:{mq_pwd}@{mq_host}/"
         self._queue_name = queue_name
         self._handlers: dict[HANDLER_NAME: HANDLER] = handlers
         self._tech_service = tech_service
+        self._exchange = mq_exchange    # "hrp"
+        self._routing_key = mq_routing_key  # "org_event"
 
     def __str__(self) -> str:
         return "EventReceiver..."   # ToDo move to Name and inject
@@ -49,8 +53,8 @@ class EventReceiver:
             channel = await conn.channel()
             queue = await channel.declare_queue(self._queue_name, durable=True)
             await queue.bind(
-                exchange="hrp",
-                routing_key="org_event",    # ToDo to Config
+                exchange=self._exchange,
+                routing_key=self._routing_key,
             )
             async with queue.iterator() as queue_iter:
                 message: aio_pika.IncomingMessage
