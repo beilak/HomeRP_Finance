@@ -26,8 +26,8 @@ class EventReceiver:
         self._queue_name = queue_name
         self._handlers: dict[HANDLER_NAME: HANDLER] = handlers
         self._tech_service = tech_service
-        self._exchange = mq_exchange    # "hrp"
-        self._routing_key = mq_routing_key  # "org_event"
+        self._exchange = mq_exchange
+        self._routing_key = mq_routing_key  # ToDo it should be tuple of routs key
 
     def __str__(self) -> str:
         return "EventReceiver..."   # ToDo move to Name and inject
