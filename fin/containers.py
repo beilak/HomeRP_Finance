@@ -40,6 +40,7 @@ class FinContainer(containers.DeclarativeContainer):
         TargetRepository,
         db_session=_fin_db.provided.new_session,
     )
+
     _target_cnt_repository: Factory[TargetCntRepository] = Factory(
         TargetCntRepository,
         db_session=_fin_db.provided.new_session,
@@ -56,12 +57,12 @@ class FinContainer(containers.DeclarativeContainer):
     )
 
     tech_service: Factory[TechService] = Factory(
-        init_tech_service, #TechService,
+        init_tech_service,
         repository=_target_repository,
-        redis_auth=providers.Dict(  # ToDo replace to Conffig
-            host="127.0.0.1",
-            port=6379,
-            pwd="test_pass",
+        redis_auth=providers.Dict(
+            host=config.redis_host,
+            port=config.redis_port,
+            pwd=config.redis_pwd,
         )
     )
 

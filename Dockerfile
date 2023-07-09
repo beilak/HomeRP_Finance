@@ -11,4 +11,4 @@ RUN poetry env use python3 \
 
 COPY fin fin
 
-ENTRYPOINT ["poetry", "run", "uvicorn", "fin.__main__:FIN_APP", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["poetry", "run", "uvicorn", "fin.__main__:FIN_APP", "--host", "0.0.0.0", "--port", "8000", "--root-path", "/fin"]
