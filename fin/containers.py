@@ -16,7 +16,7 @@ class FinContainer(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(
         modules=[
             ".route.target.target", ".route.target.target_cnt", ".route.tech.tech",
-            ".__main__",
+            ".__main__", ".route.probes.healthchecks",
         ]
     )
 
@@ -63,7 +63,13 @@ class FinContainer(containers.DeclarativeContainer):
             host=config.redis_host,
             port=config.redis_port,
             pwd=config.redis_pwd,
-        )
+        ),
+        mq=providers.Dict(
+            mq_host=config.mq_host,
+            mq_user=config.mq_user,
+            mq_pwd=config.mq_pass,
+            mq_exchange=config.mq_exchange,
+        ),
     )
 
     keycloak_adapter: Singleton[KeycloakAdapter] = Singleton(
@@ -81,11 +87,11 @@ class FinContainer(containers.DeclarativeContainer):
 
     event_receiver: Factory[EventReceiver] = Factory(
         EventReceiver,
+        tech_service=tech_service,
         mq_host=config.mq_host,
         mq_user=config.mq_user,
         mq_pwd=config.mq_pass,
-        queue_name=config.listen_queue,
-        tech_service=tech_service,
+        queue_name=config.mq_listen_queue,
         mq_exchange=config.mq_exchange,
         mq_routing_key=config.mq_routing_key,
         handlers=providers.Dict(

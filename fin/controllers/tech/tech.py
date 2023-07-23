@@ -6,6 +6,7 @@ import hashlib
 from fin.models.target import TargetResponseModel
 from fin.adapters.repository.target import TargetRepository
 import logging
+import aio_pika
 
 
 class TechService:
@@ -15,6 +16,7 @@ class TechService:
             self,
             repository: TargetRepository,
             redis_auth: dict,
+            mq: dict,
     ):
         self._redis_auth: dict = redis_auth
         self.__pool = BlockingConnectionPool(
@@ -24,23 +26,24 @@ class TechService:
             decode_responses=True,
         )
         self._repository: TargetRepository = repository
+        self._mq_dsn = f"amqp://{mq['mq_user']}:{mq['mq_pwd']}@{mq['mq_host']}/"
+        self._mq_exchange = mq["mq_exchange"]
 
     def __await__(self):
         return self.init().__await__()
 
     async def init(self):
+        # ToDo inject Redis
         self._pool = await Redis(connection_pool=self.__pool)
-        print("a init")
-        print(self._pool)
-        return self
 
-    # async def get_redis(self) -> Redis:
-    #     # ToDo Add Async init and inject redis
-    #     return await redis.Redis(
-    #         host=self._redis_auth['host'],
-    #         port=self._redis_auth['port'],
-    #         password=self._redis_auth['pwd'],
-    #     ).connection
+        # ToDo Declarate exchange should not be here
+        async with await aio_pika.connect_robust(self._mq_dsn) as conn:
+            channel = await conn.channel()
+            await channel.declare_exchange(
+                self._mq_exchange, aio_pika.ExchangeType.DIRECT,
+            )
+
+        return self
 
     async def get_target_fingerprint(self, unit_id: str, target_cnt_id: int) -> str:
         """Read target fingerprint"""
@@ -58,23 +61,33 @@ class TechService:
             )
         targets_str = json.dumps(targets, default=str,)
         return hashlib.sha256(targets_str.encode('utf-8')).hexdigest()
-        # return await self._repository.get_targets(unit_id=target_id)
 
     async def set_req_processed(self, req_id: str) -> None:
-        # cache = await self.get_redis()
         await self._pool.set(name=req_id, value=req_id)
 
     async def is_req_processed(self, req_id: str) -> bool:
-        # cache = await self.get_redis()
         proc_id = await self._pool.get(name=req_id)
         return True if proc_id == req_id else False
+
+    async def check_db_connection(self) -> None:
+        await self._repository.is_obj_exist(1)
+
+    async def check_rabbit(self) -> None:
+        # ToDo Replace to EventController
+        async with await aio_pika.connect_robust(self._mq_dsn, timeout=1) as conn:
+            await conn.channel()
+
+    async def check_redis(self) -> None:
+        await self.is_req_processed("nil")
 
 
 async def init_tech_service(
         repository: TargetRepository,
         redis_auth: dict,
+        mq: dict,
 ) -> TechService:
     return await TechService(
         repository,
-        redis_auth
+        redis_auth,
+        mq,
     )

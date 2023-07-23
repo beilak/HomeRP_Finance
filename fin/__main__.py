@@ -4,7 +4,7 @@ from typing import Final
 from fastapi import FastAPI, Depends
 from fastapi.exceptions import RequestValidationError, StarletteHTTPException
 from fin.exceptions import valid_except_handler, http_except_handler
-from fin.route import target_router, target_cnt_router, tech_router
+from fin.route import target_router, target_cnt_router, tech_router, checker_router
 # from fastapi.middleware.cors import CORSMiddleware
 from fin.route.oauth import oauth_check
 from dependency_injector.wiring import Provide, inject
@@ -73,6 +73,7 @@ FIN_APP.add_middleware(PrometheusMiddleware)
 FIN_APP.include_router(target_cnt_router, prefix=_API_PREFIX, tags=["Target"])
 FIN_APP.include_router(target_router, prefix=_API_PREFIX, tags=["Target flow"])
 FIN_APP.include_router(tech_router, prefix=_API_PREFIX, tags=["Tech"])
+FIN_APP.include_router(checker_router, prefix="/check", tags=["Check"])
 FIN_APP.add_route("/metrics", metrics)
 
 FIN_APP.add_exception_handler(RequestValidationError, valid_except_handler)

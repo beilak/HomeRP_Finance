@@ -10,7 +10,10 @@ async def valid_except_handler(
     """Request valid handler"""
     # ToDo implement
 
-    return JSONResponse(status_code=exc.status_code, content=f'{exc.detail}')
+    status_code = 500
+    detail = str(exc)
+
+    return JSONResponse(status_code=status_code, content=f'{detail}')
 
 
 async def http_except_handler(

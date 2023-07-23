@@ -38,14 +38,19 @@ class EventReceiver:
     async def _run(self):
         while True:
             try:
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(3)
                 await self._run_receive_msg()
             except TimeoutError as time_e:
                 logging.error(msg=f"Exception on {str(self)}. {time_e = } {type(time_e) = }")
-            except asyncio.exceptions.CancelledError or aiormq.exceptions.ChannelInvalidStateError:
+            # except aiormq.exceptions.ChannelInvalidStateError as e:
+            #     logging.error(msg=f"ChannelInvalidStateError on {str(self)}. {e = } {type(e) = }")
+            except aiormq.exceptions.AMQPError as e:
+                logging.error(msg=f"AMQPError {str(self)}. {e = } {type(e) = }")
+            except asyncio.exceptions.CancelledError:
+                logging.error(msg=f"CancelledError on {str(self)}. {e = } {type(e) = }")
                 break
             except BaseException as e:
-                logging.error(msg=f"Exception on {str(self)}. {e = } {type(e) = }")
+                logging.error(msg=f"BaseException on {str(self)}. {e = } {type(e) = }")
                 break
 
     async def _run_receive_msg(self) -> None:

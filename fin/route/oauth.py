@@ -33,12 +33,15 @@ OAUTH_FLOWS: Final[OAuth2] = OAuth2(
 
 @inject
 async def oauth_check(
-        x_token: str = Header()
+        x_token: str = Header(default=None)
         # token: str = Security(OAUTH_FLOWS),
         # keycloak_adapter: KeycloakAdapter = Depends(Provide[FinContainer.keycloak_adapter])
 ) -> UserProfile:
     """Auth check and return User Login"""
     # ToDo TMP Auth use X-Token (as a dict). Must be be JWT
+    if x_token == None:
+        # ToDo TMP!
+        return None
     token_json = json.loads(x_token)
     return UserProfile(
         login=token_json['login'],

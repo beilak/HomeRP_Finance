@@ -61,7 +61,6 @@ class TargetCntService(Service):
         ]
         ""
 
-        logging.error(">>>>>")
         for template in templates:
             try:
                 cnt = TargetCnt(
@@ -76,4 +75,5 @@ class TargetCntService(Service):
                 )
                 await self._repository.add(cnt)
             except BaseException as e:
-                logging.error(f">>>>, {e}")
+                # ToDo set correct exc
+                logging.error(f"Error. {e}")
