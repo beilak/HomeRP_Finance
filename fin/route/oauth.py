@@ -33,22 +33,32 @@ OAUTH_FLOWS: Final[OAuth2] = OAuth2(
 
 @inject
 async def oauth_check(
-        x_token: str = Header(default=None)
+        x_username: str = Header(default=None),
+        x_auth_token: str = Header(default=None),
+        x_unit: str = Header(default=None),
         # token: str = Security(OAUTH_FLOWS),
         # keycloak_adapter: KeycloakAdapter = Depends(Provide[FinContainer.keycloak_adapter])
 ) -> UserProfile:
+    print(">"*10)
+    print(f"{x_username=}")
+    print(f"{x_unit=}")
+    print(f"{x_auth_token=}")
     """Auth check and return User Login"""
     # ToDo TMP Auth use X-Token (as a dict). Must be be JWT
-    if x_token == None:
-        # ToDo TMP!
-        return None
-    token_json = json.loads(x_token)
-    return UserProfile(
-        login=token_json['login'],
-        unit_id=token_json['unit_id'],
-    )
+    # if x_token == None:
+    #     # ToDo TMP!
+    #     return None
+    # token_json = json.loads(x_token)
+    # return UserProfile(
+    #     login=token_json['login'],
+    #     unit_id=token_json['unit_id'],
+    # )
     # try:
     #     decoded_token = await keycloak_adapter.check_token(token.split()[1])
     # except Exception:
     #     raise HTTPException(status_code=400, detail="Token header invalid")
     # return decoded_token["email"]
+    return UserProfile(
+        login=x_username,
+        unit_id=x_unit,
+    )

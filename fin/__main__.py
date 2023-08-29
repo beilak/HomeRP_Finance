@@ -48,9 +48,9 @@ FIN_APP = FastAPI(
     swagger_ui_init_oauth={
         "clientId": "HomeRP_UI"
     },
-    dependencies=[
-        Depends(oauth_check)
-    ]
+    # dependencies=[
+    #     Depends(oauth_check)
+    # ]
 )
 
 # ORIGINS = [
